@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { ledgerEntries, transactions } from "@/db/schema";
 import { requireApiKey } from "@/lib/auth-guard";
-import { Quantizer } from "@/lib/quantization";
 import { cursorPaginationSchema } from "@/lib/zod-schemas";
-import { and, desc, eq, gt } from "drizzle-orm";
+import { groupAndMaskLedgerEntries } from "@/lib/ledger-masking";
+import { and, desc, eq, gt, inArray } from "drizzle-orm";
 import { ApiError } from "@/lib/errors";
 
 export async function GET(req: NextRequest) {
@@ -44,43 +44,49 @@ export async function GET(req: NextRequest) {
     const whereClause =
       conditions.length === 0 ? undefined : and(...(conditions as [any, ...any[]]));
 
-    const rows = await db
+    const txRows = await db
       .select({
         id: transactions.id,
         type: transactions.type,
         status: transactions.status,
         createdAt: transactions.createdAt,
-        ledgerId: ledgerEntries.id,
-        walletId: ledgerEntries.walletId,
-        amount: ledgerEntries.amount,
-        entryType: ledgerEntries.entryType,
-        narration: ledgerEntries.narration,
       })
       .from(transactions)
-      .innerJoin(
-        ledgerEntries,
-        eq(ledgerEntries.transactionId, transactions.id),
-      )
       .where(whereClause as any)
       .orderBy(desc(transactions.createdAt))
       .limit(limit + 1);
 
-    const hasMore = rows.length > limit;
-    const pageRows = hasMore ? rows.slice(0, limit) : rows;
-    const nextCursor = hasMore ? pageRows[pageRows.length - 1]?.id ?? null : null;
+    const hasMore = txRows.length > limit;
+    const pageTxRows = hasMore ? txRows.slice(0, limit) : txRows;
+    const nextCursor = hasMore ? pageTxRows[pageTxRows.length - 1]?.id ?? null : null;
 
-    const items = pageRows.map((row) => ({
+    const txIds = pageTxRows.map((row) => row.id);
+    const ledgerRows =
+      txIds.length === 0
+        ? []
+        : await db
+            .select({
+              id: ledgerEntries.id,
+              transactionId: ledgerEntries.transactionId,
+              walletId: ledgerEntries.walletId,
+              amount: ledgerEntries.amount,
+              entryType: ledgerEntries.entryType,
+              narration: ledgerEntries.narration,
+              createdAt: ledgerEntries.createdAt,
+            })
+            .from(ledgerEntries)
+            .where(inArray(ledgerEntries.transactionId, txIds))
+            .orderBy(desc(ledgerEntries.createdAt));
+
+    const txTypeById = new Map(pageTxRows.map((row) => [row.id, row.type]));
+    const ledgerByTransaction = groupAndMaskLedgerEntries(ledgerRows, txTypeById);
+
+    const items = pageTxRows.map((row) => ({
       id: row.id,
       type: row.type,
       status: row.status,
       createdAt: row.createdAt,
-      ledgerEntry: {
-        id: row.ledgerId,
-        walletId: row.walletId,
-        amount: Quantizer.toDisplay(BigInt(row.amount)),
-        entryType: row.entryType,
-        narration: row.narration,
-      },
+      ledgerEntries: ledgerByTransaction.get(row.id) ?? [],
     }));
 
     return NextResponse.json(

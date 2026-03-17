@@ -13,7 +13,8 @@ Headless wallet API built with Next.js, PostgreSQL, Drizzle ORM, and Better Auth
 - [Ledger Model](#ledger-model)
 - [Balance Computation](#balance-computation)
 - [Quantization And Currency](#quantization-and-currency)
-- [Local Run](#local-run)
+- [Postman Examples](#postman-examples)
+- [Set Up](#set-up)
 
 ## Architecture
 
@@ -153,7 +154,7 @@ This matters for multi-currency systems because fractional precision varies by c
 
 Even when the current examples use a single currency, the storage model should assume heterogeneous precision from the start. Integer quantization is the foundation that allows currency-aware rounding and settlement rules to be introduced safely later.
 
-## Local Run
+## Set Up
 
 The project runs in Docker using `docker-compose`. Startup brings up the API and PostgreSQL together, and the database is initialized from the bundled setup SQL so schema objects and seed data are available immediately.
 
@@ -176,3 +177,441 @@ Required system wallet ids are provided through:
 - `SYSTEM_FEE_WALLET_ID`
 - `SYSTEM_DEPOSIT_WALLET_ID`
 - `SYSTEM_WITHDRAWAL_WALLET_ID`
+
+
+## Postman Examples
+
+The examples below mirror the local test flow and can be copied into Postman as individual requests. Set `{{baseUrl}}` to `http://localhost:3000`.
+
+### 1. Create Admin API Key
+
+`GET {{baseUrl}}/api/v1/admin/api-keys`
+
+Headers:
+
+- none
+
+Body:
+
+- none
+
+Example response:
+
+```json
+{
+  "key": "adm_xxx",
+  "apiKeyId": "..."
+}
+```
+
+### 2. Create User API Key
+
+`GET {{baseUrl}}/api/v1/api-keys`
+
+Headers:
+
+- none
+
+Body:
+
+- none
+
+Example response:
+
+```json
+{
+  "key": "usr_xxx",
+  "apiKeyId": "..."
+}
+```
+
+### 3. Create User And Wallet
+
+`POST {{baseUrl}}/api/v1/users`
+
+Headers:
+
+- `Content-Type: application/json`
+- `x-api-key: {{adminKey}}`
+
+Body:
+
+```json
+{
+  "name": "Alice Wanjiku",
+  "email": "alice@example.com"
+}
+```
+
+Example response:
+
+```json
+{
+  "user": {
+    "id": "...",
+    "name": "Alice Wanjiku",
+    "email": "alice@example.com"
+  },
+  "wallet": {
+    "id": "...",
+    "currency": "KES",
+    "createdAt": "..."
+  }
+}
+```
+
+Repeat the same request for a second user, for example `Bob Kamau`, and save both wallet ids for later requests.
+
+### 4. Deposit Funds
+
+`POST {{baseUrl}}/api/v1/wallets/deposit`
+
+Headers:
+
+- `Content-Type: application/json`
+- `x-api-key: {{userKey}}`
+- `Idempotency-Key: deposit-alice-001`
+
+Body:
+
+```json
+{
+  "walletId": "{{aliceWalletId}}",
+  "amount": 10000
+}
+```
+
+Example response:
+
+```json
+{
+  "transactionId": "...",
+  "status": "success",
+  "walletId": "{{aliceWalletId}}",
+  "amount": 10000
+}
+```
+
+### 5. Transfer Funds
+
+`POST {{baseUrl}}/api/v1/wallets/transfer`
+
+Headers:
+
+- `Content-Type: application/json`
+- `x-api-key: {{userKey}}`
+- `Idempotency-Key: transfer-alice-bob-001`
+
+Body:
+
+```json
+{
+  "senderId": "{{aliceWalletId}}",
+  "receiverId": "{{bobWalletId}}",
+  "amount": 2500
+}
+```
+
+Example response:
+
+```json
+{
+  "transactionId": "...",
+  "status": "success",
+  "amount": 2500,
+  "fee": 25
+}
+```
+
+### 6. Withdraw Funds
+
+`POST {{baseUrl}}/api/v1/wallets/withdraw`
+
+Headers:
+
+- `Content-Type: application/json`
+- `x-api-key: {{userKey}}`
+- `Idempotency-Key: withdraw-alice-001`
+
+Body:
+
+```json
+{
+  "walletId": "{{aliceWalletId}}",
+  "amount": 1000
+}
+```
+
+Example response:
+
+```json
+{
+  "transactionId": "...",
+  "status": "success",
+  "walletId": "{{aliceWalletId}}",
+  "amount": 1000,
+  "fee": 10
+}
+```
+
+### 7. Read Wallet Balance
+
+`GET {{baseUrl}}/api/v1/wallets/{{aliceWalletId}}/balance`
+
+Headers:
+
+- `x-api-key: {{userKey}}`
+
+Body:
+
+- none
+
+Example response:
+
+```json
+{
+  "walletId": "{{aliceWalletId}}",
+  "balance": 6465
+}
+```
+
+After a deposit of `10000`, a transfer of `2500` with a `25` transfer fee, and a withdrawal of `1000` with a `10` withdrawal fee, the expected balance is `6465`.
+
+### 8. Read Wallet Transactions
+
+`GET {{baseUrl}}/api/v1/wallets/{{aliceWalletId}}/transactions?limit=10&offset=0`
+
+Headers:
+
+- `x-api-key: {{userKey}}`
+
+Body:
+
+- none
+
+Example response:
+
+```json
+{
+  "items": [
+    {
+      "id": "tx_deposit_001",
+      "type": "DEPOSIT",
+      "status": "COMPLETED",
+      "createdAt": "2026-03-17T10:00:00.000Z",
+      "subTransactions": [
+        {
+          "id": "le_deposit_user",
+          "walletId": "{{aliceWalletId}}",
+          "amount": 10000,
+          "entryType": "CREDIT",
+          "narration": "Deposit to wallet",
+          "createdAt": "2026-03-17T10:00:00.000Z"
+        },
+        {
+          "id": "le_deposit_system",
+          "amount": 10000,
+          "entryType": "DEBIT",
+          "narration": "External deposit source",
+          "createdAt": "2026-03-17T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "tx_transfer_001",
+      "type": "TRANSFER",
+      "status": "COMPLETED",
+      "createdAt": "2026-03-17T10:05:00.000Z",
+      "subTransactions": [
+        {
+          "id": "le_transfer_debit",
+          "walletId": "{{aliceWalletId}}",
+          "amount": 2525,
+          "entryType": "DEBIT",
+          "narration": "Debit: Transfer to {{bobWalletId}}",
+          "createdAt": "2026-03-17T10:05:00.000Z"
+        },
+        {
+          "id": "le_transfer_credit",
+          "walletId": "{{bobWalletId}}",
+          "amount": 2500,
+          "entryType": "CREDIT",
+          "narration": "Credit: Transfer from {{aliceWalletId}}",
+          "createdAt": "2026-03-17T10:05:00.000Z"
+        },
+        {
+          "id": "le_transfer_fee",
+          "amount": 25,
+          "entryType": "CREDIT",
+          "narration": "Processing Fee",
+          "createdAt": "2026-03-17T10:05:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "tx_withdrawal_001",
+      "type": "WITHDRAWAL",
+      "status": "COMPLETED",
+      "createdAt": "2026-03-17T10:10:00.000Z",
+      "subTransactions": [
+        {
+          "id": "le_withdrawal_user",
+          "walletId": "{{aliceWalletId}}",
+          "amount": 1010,
+          "entryType": "DEBIT",
+          "narration": "Withdrawal from wallet",
+          "createdAt": "2026-03-17T10:10:00.000Z"
+        },
+        {
+          "id": "le_withdrawal_system",
+          "amount": 1000,
+          "entryType": "CREDIT",
+          "narration": "External withdrawal destination",
+          "createdAt": "2026-03-17T10:10:00.000Z"
+        },
+        {
+          "id": "le_withdrawal_fee",
+          "amount": 10,
+          "entryType": "CREDIT",
+          "narration": "Processing Fee",
+          "createdAt": "2026-03-17T10:10:00.000Z"
+        }
+      ]
+    }
+  ],
+  "pagination": {
+    "limit": 10,
+    "offset": 0
+  }
+}
+```
+
+System wallets are intentionally masked in these nested entries. When `walletId` is omitted, the row belongs to an internal source, sink, or fee wallet.
+
+The nested structure is the API representation of the underlying ledger transaction:
+
+- a `DEPOSIT` contains a credit into the user wallet and a balancing debit from an internal source wallet
+- a `WITHDRAWAL` contains a debit from the user wallet and a balancing credit into an internal sink wallet
+- a `TRANSFER` contains a debit from the sender, a credit to the receiver, and a credit to the fee wallet
+
+These nested rows are the components of one business transaction. Read them together, not independently. The sum of all nested amounts still resolves to a zero-sum movement across participating wallets.
+
+System accounts are masked so client-facing responses expose the business effect of the transaction without leaking internal wallet identifiers. The internal source, withdrawal sink, and fee wallets still participate in the ledger and still enforce balance conservation; they are only hidden at the response layer.
+
+### 9. Read All Transactions
+
+`GET {{baseUrl}}/api/v1/transactions?limit=50`
+
+Headers:
+
+- `x-api-key: {{adminKey}}`
+
+Body:
+
+- none
+
+Example response:
+
+```json
+{
+  "items": [
+    {
+      "id": "tx_deposit_001",
+      "type": "DEPOSIT",
+      "status": "COMPLETED",
+      "createdAt": "2026-03-17T10:00:00.000Z",
+      "ledgerEntries": [
+        {
+          "id": "le_deposit_user",
+          "walletId": "{{aliceWalletId}}",
+          "amount": 10000,
+          "entryType": "CREDIT",
+          "narration": "Deposit to wallet",
+          "createdAt": "2026-03-17T10:00:00.000Z"
+        },
+        {
+          "id": "le_deposit_system",
+          "amount": 10000,
+          "entryType": "DEBIT",
+          "narration": "External deposit source",
+          "createdAt": "2026-03-17T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "tx_transfer_001",
+      "type": "TRANSFER",
+      "status": "COMPLETED",
+      "createdAt": "2026-03-17T10:05:00.000Z",
+      "ledgerEntries": [
+        {
+          "id": "le_transfer_debit",
+          "walletId": "{{aliceWalletId}}",
+          "amount": 2525,
+          "entryType": "DEBIT",
+          "narration": "Debit: Transfer to {{bobWalletId}}",
+          "createdAt": "2026-03-17T10:05:00.000Z"
+        },
+        {
+          "id": "le_transfer_credit",
+          "walletId": "{{bobWalletId}}",
+          "amount": 2500,
+          "entryType": "CREDIT",
+          "narration": "Credit: Transfer from {{aliceWalletId}}",
+          "createdAt": "2026-03-17T10:05:00.000Z"
+        },
+        {
+          "id": "le_transfer_fee",
+          "amount": 25,
+          "entryType": "CREDIT",
+          "narration": "Processing Fee",
+          "createdAt": "2026-03-17T10:05:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "tx_withdrawal_001",
+      "type": "WITHDRAWAL",
+      "status": "COMPLETED",
+      "createdAt": "2026-03-17T10:10:00.000Z",
+      "ledgerEntries": [
+        {
+          "id": "le_withdrawal_user",
+          "walletId": "{{aliceWalletId}}",
+          "amount": 1010,
+          "entryType": "DEBIT",
+          "narration": "Withdrawal from wallet",
+          "createdAt": "2026-03-17T10:10:00.000Z"
+        },
+        {
+          "id": "le_withdrawal_system",
+          "amount": 1000,
+          "entryType": "CREDIT",
+          "narration": "External withdrawal destination",
+          "createdAt": "2026-03-17T10:10:00.000Z"
+        },
+        {
+          "id": "le_withdrawal_fee",
+          "amount": 10,
+          "entryType": "CREDIT",
+          "narration": "Processing Fee",
+          "createdAt": "2026-03-17T10:10:00.000Z"
+        }
+      ]
+    }
+  ],
+  "nextCursor": null
+}
+```
+
+The admin transaction feed uses the same nested ledger concept, but grouped under `ledgerEntries` instead of `subTransactions`.
+
+Masking still applies in the admin feed shown here. Internal system accounts are represented by entries without `walletId`, while user-facing wallets retain their identifiers. This keeps the response readable while preserving the shape of the complete accounting event.
+
+Recommended Postman variables:
+
+- `baseUrl`
+- `adminKey`
+- `userKey`
+- `aliceWalletId`
+- `bobWalletId`

@@ -65,11 +65,21 @@ export async function POST(req: NextRequest) {
     }
     // TODO: Enforce withdrawer ownership/authorization for the target wallet.
     const internalAmount = Quantizer.toInternal(amount);
+    const fee = internalAmount / 100n; // 1%
+    const totalDebit = internalAmount + fee;
 
     const withdrawalWalletId = process.env.SYSTEM_WITHDRAWAL_WALLET_ID;
     if (!withdrawalWalletId) {
       return NextResponse.json(
         { error: "System withdrawal wallet not configured", code: "MISSING_SYSTEM_WITHDRAWAL_WALLET" },
+        { status: 500 },
+      );
+    }
+
+    const systemFeeWalletId = process.env.SYSTEM_FEE_WALLET_ID;
+    if (!systemFeeWalletId) {
+      return NextResponse.json(
+        { error: "System fee wallet not configured", code: "MISSING_SYSTEM_FEE_WALLET" },
         { status: 500 },
       );
     }
@@ -91,7 +101,7 @@ export async function POST(req: NextRequest) {
         .where(eq(walletBalances.walletId, walletId));
 
       const currentBalance = BigInt(balanceRow?.balance ?? 0n);
-      if (currentBalance < internalAmount) {
+      if (currentBalance < totalDebit) {
         throw new ApiError("Insufficient funds", 422, "INSUFFICIENT_FUNDS");
       }
 
@@ -108,7 +118,7 @@ export async function POST(req: NextRequest) {
       await insertLedgerSplits(tx, transactionId, [
         {
           walletId,
-          amount: -internalAmount,
+          amount: -totalDebit,
           narration: "Withdrawal from wallet",
         },
         {
@@ -116,11 +126,16 @@ export async function POST(req: NextRequest) {
           amount: internalAmount,
           narration: "External withdrawal destination",
         },
+        {
+          walletId: systemFeeWalletId,
+          amount: fee,
+          narration: "Processing Fee",
+        },
       ]);
 
       await tx.refreshMaterializedView(walletBalances).concurrently();
 
-      return { transactionId };
+      return { transactionId, fee };
     });
 
     const responseBody = {
@@ -128,6 +143,7 @@ export async function POST(req: NextRequest) {
       status: "success",
       walletId,
       amount,
+      fee: Quantizer.toDisplay(result.fee),
     };
 
     await saveIdempotency(idempotencyKey, authCtx.userId, {

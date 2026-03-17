@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { ledgerEntries, transactions, wallets } from "@/db/schema";
 import { requireApiKey } from "@/lib/auth-guard";
-import { Quantizer } from "@/lib/quantization";
 import { paginationSchema } from "@/lib/zod-schemas";
-import { desc, eq } from "drizzle-orm";
+import { groupAndMaskLedgerEntries } from "@/lib/ledger-masking";
+import { desc, eq, inArray } from "drizzle-orm";
 import { ApiError } from "@/lib/errors";
 
 export async function GET(
@@ -43,38 +43,57 @@ export async function GET(
     const limit = Number(parsed.data.limit);
     const offset = Number(parsed.data.offset);
 
-    const rows = await db
+    const transactionRows = await db
       .select({
-        id: ledgerEntries.id,
-        transactionId: ledgerEntries.transactionId,
-        walletId: ledgerEntries.walletId,
-        amount: ledgerEntries.amount,
-        entryType: ledgerEntries.entryType,
-        narration: ledgerEntries.narration,
-        createdAt: ledgerEntries.createdAt,
+        transactionId: transactions.id,
+        createdAt: transactions.createdAt,
         txType: transactions.type,
         txStatus: transactions.status,
       })
-      .from(ledgerEntries)
-      .innerJoin(
-        transactions,
-        eq(ledgerEntries.transactionId, transactions.id),
-      )
+      .from(transactions)
+      .innerJoin(ledgerEntries, eq(ledgerEntries.transactionId, transactions.id))
       .where(eq(ledgerEntries.walletId, walletId))
-      .orderBy(desc(ledgerEntries.createdAt))
+      .orderBy(desc(transactions.createdAt))
       .limit(limit)
       .offset(offset);
 
-    const items = rows.map((row) => ({
-      id: row.id,
-      transactionId: row.transactionId,
-      walletId: row.walletId,
-      amount: Quantizer.toDisplay(BigInt(row.amount)),
-      entryType: row.entryType,
-      narration: row.narration,
+    const dedupedTransactions: typeof transactionRows = [];
+    const seen = new Set<string>();
+    for (const row of transactionRows) {
+      if (seen.has(row.transactionId)) continue;
+      seen.add(row.transactionId);
+      dedupedTransactions.push(row);
+    }
+
+    const txIds = dedupedTransactions.map((row) => row.transactionId);
+    const subTransactionRows =
+      txIds.length === 0
+        ? []
+        : await db
+            .select({
+              id: ledgerEntries.id,
+              transactionId: ledgerEntries.transactionId,
+              walletId: ledgerEntries.walletId,
+              amount: ledgerEntries.amount,
+              entryType: ledgerEntries.entryType,
+              narration: ledgerEntries.narration,
+              createdAt: ledgerEntries.createdAt,
+            })
+            .from(ledgerEntries)
+            .where(inArray(ledgerEntries.transactionId, txIds))
+            .orderBy(desc(ledgerEntries.createdAt));
+
+    const txTypeById = new Map(
+      dedupedTransactions.map((row) => [row.transactionId, row.txType]),
+    );
+    const subTransactionsByTransactionId = groupAndMaskLedgerEntries(subTransactionRows, txTypeById);
+
+    const items = dedupedTransactions.map((row) => ({
+      id: row.transactionId,
+      type: row.txType,
+      status: row.txStatus,
       createdAt: row.createdAt,
-      transactionType: row.txType,
-      transactionStatus: row.txStatus,
+      subTransactions: subTransactionsByTransactionId.get(row.transactionId) ?? [],
     }));
 
     return NextResponse.json(

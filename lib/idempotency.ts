@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { idempotencyKeys } from "@/db/schema";
-import { eq, gt } from "drizzle-orm";
+import { and, eq, gt } from "drizzle-orm";
 
 const IDEMPOTENCY_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -11,7 +11,7 @@ type CachedResponse = {
 
 export async function checkIdempotency(
   key: string,
-  userId: string,
+  _userId: string,
 ): Promise<CachedResponse | null> {
   const now = new Date();
 
@@ -19,9 +19,10 @@ export async function checkIdempotency(
     .select()
     .from(idempotencyKeys)
     .where(
-      eq(idempotencyKeys.key, key) &&
-        eq(idempotencyKeys.userId, userId) &&
+      and(
+        eq(idempotencyKeys.key, key),
         gt(idempotencyKeys.expiresAt, now),
+      ),
     )
     .limit(1);
 
