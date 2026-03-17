@@ -158,17 +158,10 @@ Even when the current examples use a single currency, the storage model should a
 
 The project runs in Docker using `docker-compose`. Startup brings up the API and PostgreSQL together, and the database is initialized from the bundled setup SQL so schema objects and seed data are available immediately.
 
-First, let's tear down any postgres volumes that might bring conflict with our new postgres volume.
-
-```bash
-docker-compose down -v
-```
-
-!!! This command deletes existing Docker volumes for the stack, including persisted PostgreSQL data. !!!
-
 To start the API stack:
 ```bash
 cp .env.example .env
+docker-compose down -v
 chmod +x init-db/*.sh
 docker-compose up --build
 ```
