@@ -14,6 +14,7 @@ The project also uses a local-first setup so the full system can run on a develo
 - [Idempotency](#idempotency)
 - [Atomicity](#atomicity)
 - [Concurrency Control](#concurrency-control)
+- [Amount Validation](#amount-validation)
 - [Ledger Model](#ledger-model)
 - [Balance Computation](#balance-computation)
 - [Quantization And Currency](#quantization-and-currency)
@@ -121,6 +122,23 @@ This prevents concurrent requests from reading the same spendable balance and ov
 An alternative design would be optimistic concurrency control using PostgreSQL MVCC, with deferred checks or deferred triggers evaluated before commit. That approach can reduce lock contention, but this project chooses explicit row locking because the behavior is simpler and easier to reason about for wallet debits.
 
 The choice favors predictability over maximum concurrency. For a wallet system, making insufficient-funds checks deterministic under contention is often more important than extracting additional parallel write throughput.
+
+## Amount Validation
+
+Deposit, transfer, and withdrawal requests only accept positive amounts. Negative values are rejected at request validation time, and amounts are also constrained to the supported precision.
+
+For debit flows, the system checks that the wallet can cover the full debit before writing ledger entries:
+
+- transfer checks `amount + fee`
+- withdrawal checks `amount + fee`
+- deposit does not allow a negative amount that could act like a disguised debit
+
+This prevents two common failure modes:
+
+- using negative inputs to invert transaction meaning
+- allowing a wallet to spend the principal amount but not the related fee
+
+In practice, a transfer or withdrawal is only accepted when the wallet has enough balance to absorb both the requested amount and any fee charged by the operation.
 
 ## Ledger Model
 
