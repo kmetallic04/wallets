@@ -30,7 +30,9 @@ The system separates control-plane access from money-movement access:
 - Admin keys can provision users and inspect system data.
 - User keys can perform deposits, withdrawals, and transfers on wallets they own.
 
-This split keeps operational privileges away from transactional privileges. Admin access is used for provisioning and oversight, while user access is constrained to wallet actions scoped to owned accounts.
+This split keeps operational privileges away from transactional privileges. Admin access is used for provisioning and oversight, while user access is used for money movement.
+
+For local development, user keys are intentionally permissive and can be used across accounts so test flows are easier to run. This should be treated as a development shortcut only, not as a production access model. Admin and user keys are still not interchangeable: endpoints that require admin access must be called with an admin key.
 
 ## API Keys
 
