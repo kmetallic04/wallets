@@ -132,6 +132,8 @@ For debit flows, the system checks that the wallet can cover the full debit befo
 - transfer checks `amount + fee`
 - withdrawal checks `amount + fee`
 - deposit does not allow a negative amount that could act like a disguised debit
+- withdrawal does not allow some clever folks to illegally add their balances by withdrawing negative amounts
+- transfers do not allow an illegal negative transfer that might siphon money from a poor soul's wallet into the initiating wallet
 
 This prevents two common failure modes:
 
