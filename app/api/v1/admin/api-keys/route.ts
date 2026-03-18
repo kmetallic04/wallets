@@ -34,7 +34,7 @@ export async function GET() {
       );
     }
     return NextResponse.json(
-      { error: err, code: "CREATE_API_KEY_FAILED" },
+      { error: "Failed to create API key", code: "CREATE_API_KEY_FAILED" },
       { status: 500 },
     );
   }

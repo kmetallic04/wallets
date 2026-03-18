@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
       );
     }
     return NextResponse.json(
-      { error: err, code: "INTERNAL_ERROR" },
+      { error: "Failed to deposit funds", code: "DEPOSIT_FAILED" },
       { status: 500 },
     );
   }

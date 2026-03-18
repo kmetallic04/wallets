@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       );
     }
     return NextResponse.json(
-      { error: err, code: "INTERNAL_ERROR" },
+      { error: "Failed to create user", code: "CREATE_USER_FAILED" },
       { status: 500 },
     );
   }
