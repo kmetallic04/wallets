@@ -2,6 +2,10 @@
 
 Headless wallet API built with Next.js, PostgreSQL, Drizzle ORM, and Better Auth API keys.
 
+This project is meant to show how a simple wallet system can be built around safe transaction handling. It is not only a CRUD example. The code focuses on a few important ideas that appear in real financial systems. It shows how to keep related writes atomic, how to make retrying requests safe with idempotency keys, how to store amounts as quantized integers instead of floating-point values, how to model balance changes with double-entry ledger records, and how to reduce race conditions when more than one request tries to spend from the same wallet at the same time.
+
+The project also uses a local-first setup so the full system can run on a developer machine with Docker. That makes it easy to start the API and database together, inspect the schema and seed data, run requests from Postman, and see how transactions behave without needing cloud services or external dependencies.
+
 ## Table Of Contents
 
 - [Architecture](#architecture)
