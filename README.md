@@ -161,14 +161,13 @@ The project runs in Docker using `docker-compose`. Startup brings up the API and
 To start the API stack:
 ```bash
 cp .env.example .env
-docker-compose down -v
 chmod +x init-db/*.sh
 docker-compose up --build
 ```
 
 This boot flow applies the database init script during container startup, so the app starts against a pre-created schema, materialized view, and seeded system wallets.
 
-To stop the containers and remove volumes:
+To stop the containers and tear down volumes:
 ```bash
 docker-compose down -v
 ```
