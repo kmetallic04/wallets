@@ -1,3 +1,9 @@
+<div align="center">
+
+![Wallets API](./assets/hero.svg)
+
+</div>
+
 # Wallets API
 
 Headless wallet API built with Next.js, PostgreSQL, Drizzle ORM, and Better Auth API keys.
