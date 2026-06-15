@@ -1,0 +1,296 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1040" width="1100" height="1040">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#130a20"/>
+      <stop offset="100%" stop-color="#0a0612"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="50%" cy="0%" r="50%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="82%" cy="45%" r="40%">
+      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow3" cx="20%" cy="85%" r="35%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="titleAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d8b4fe"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#c084fc"/>
+    </linearGradient>
+    <linearGradient id="cardSurface" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.07"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.025"/>
+    </linearGradient>
+    <linearGradient id="featCard" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="termBar" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.12"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="28" flood-color="#a855f7" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="1040" fill="url(#bg)"/>
+  <rect width="1100" height="1040" fill="url(#glow1)"/>
+  <rect width="1100" height="1040" fill="url(#glow2)"/>
+  <rect width="1100" height="1040" fill="url(#glow3)"/>
+
+  <!-- ===================== HERO SECTION ===================== -->
+
+  <!-- Badge pill -->
+  <rect x="60" y="56" width="210" height="28" rx="14"
+        fill="#a855f7" fill-opacity="0.11"
+        stroke="#a855f7" stroke-opacity="0.32" stroke-width="1"/>
+  <circle cx="81" cy="70" r="4" fill="#c084fc"/>
+  <text x="95" y="75"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="10.5" font-weight="700" letter-spacing="0.09em"
+        fill="#c084fc">HEADLESS WALLET API</text>
+
+  <!-- Title -->
+  <text x="60" y="143"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="46" font-weight="800" letter-spacing="-1.5"
+        fill="#f3e8ff">Financial-grade</text>
+  <text x="60" y="200"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="46" font-weight="800" letter-spacing="-1.5"
+        fill="url(#titleAccent)">wallet infrastructure</text>
+  <text x="60" y="257"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="46" font-weight="800" letter-spacing="-1.5"
+        fill="#f3e8ff">for your backend.</text>
+
+  <!-- Subtitle -->
+  <text x="60" y="296"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="14.5" fill="#d8b4fe" fill-opacity="0.6">Atomic transactions &#xB7; Idempotent money movement &#xB7; Double-entry ledger</text>
+  <text x="60" y="316"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="14.5" fill="#d8b4fe" fill-opacity="0.6">Concurrency control &#xB7; Integer quantization &#xB7; Scoped API keys</text>
+
+  <!-- Stack pills -->
+  <rect x="60"  y="346" width="74" height="24" rx="6" fill="#ffffff" fill-opacity="0.055" stroke="#a855f7" stroke-opacity="0.22" stroke-width="1"/>
+  <text x="97"  y="362" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" font-weight="600" fill="#d8b4fe">Next.js</text>
+
+  <rect x="142" y="346" width="92" height="24" rx="6" fill="#ffffff" fill-opacity="0.055" stroke="#a855f7" stroke-opacity="0.22" stroke-width="1"/>
+  <text x="188" y="362" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" font-weight="600" fill="#d8b4fe">PostgreSQL</text>
+
+  <rect x="242" y="346" width="86" height="24" rx="6" fill="#ffffff" fill-opacity="0.055" stroke="#a855f7" stroke-opacity="0.22" stroke-width="1"/>
+  <text x="285" y="362" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" font-weight="600" fill="#d8b4fe">Drizzle ORM</text>
+
+  <rect x="336" y="346" width="88" height="24" rx="6" fill="#ffffff" fill-opacity="0.055" stroke="#a855f7" stroke-opacity="0.22" stroke-width="1"/>
+  <text x="380" y="362" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" font-weight="600" fill="#d8b4fe">Better Auth</text>
+
+  <!-- Terminal card -->
+  <rect x="658" y="36" width="404" height="368" rx="16"
+        fill="url(#cardSurface)"
+        stroke="#a855f7" stroke-opacity="0.22" stroke-width="1"
+        filter="url(#cardShadow)"/>
+  <rect x="658" y="36" width="404" height="44" rx="16" fill="url(#termBar)"/>
+  <rect x="658" y="58"  width="404" height="22" fill="url(#termBar)"/>
+
+  <circle cx="682" cy="58" r="5.5" fill="#ff5f57"/>
+  <circle cx="700" cy="58" r="5.5" fill="#ffbd2e"/>
+  <circle cx="718" cy="58" r="5.5" fill="#28c840"/>
+  <text x="860" y="63" text-anchor="middle"
+        font-family="'SF Mono','Fira Code',monospace"
+        font-size="10.5" fill="#d8b4fe" fill-opacity="0.45">localhost:3000</text>
+  <line x1="658" y1="80" x2="1062" y2="80" stroke="#a855f7" stroke-opacity="0.13" stroke-width="1"/>
+
+  <text x="680" y="104" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#a855f7" fill-opacity="0.48"># deposit with idempotency key</text>
+  <text x="680" y="123" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#a855f7" fill-opacity="0.6">$ curl -X POST /api/v1/wallets/deposit \</text>
+  <text x="697" y="141" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#94a3b8" fill-opacity="0.65">  -H "x-api-key: usr_..." \</text>
+  <text x="697" y="159" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#94a3b8" fill-opacity="0.65">  -H "Idempotency-Key: dep-001" \</text>
+  <text x="697" y="177" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#94a3b8" fill-opacity="0.65">  -d {&quot;walletId&quot;:&quot;...&quot;,&quot;amount&quot;:10000}</text>
+
+  <text x="680" y="204" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#a855f7" fill-opacity="0.48"># response</text>
+  <text x="680" y="222" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#94a3b8" fill-opacity="0.55">{</text>
+  <text x="696" y="240" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#94a3b8" fill-opacity="0.65">"transactionId":  </text>
+  <text x="855" y="240" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#fcd34d">"tx_8f3a..."</text>
+  <text x="696" y="258" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#94a3b8" fill-opacity="0.65">"status":         </text>
+  <text x="855" y="258" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#4ade80">"success"</text>
+  <text x="696" y="276" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#94a3b8" fill-opacity="0.65">"walletId":       </text>
+  <text x="855" y="276" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#fcd34d">"wlt_..."</text>
+  <text x="696" y="294" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#94a3b8" fill-opacity="0.65">"amount":         </text>
+  <text x="855" y="294" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#f9a8d4">10000</text>
+  <text x="680" y="312" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#94a3b8" fill-opacity="0.55">}</text>
+  <line x1="658" y1="332" x2="1062" y2="332" stroke="#a855f7" stroke-opacity="0.10" stroke-width="1"/>
+  <text x="680" y="360" font-family="'SF Mono','Fira Code',monospace" font-size="11.5" fill="#4ade80">idempotent &#xB7; atomic &#xB7; zero float drift</text>
+
+  <!-- ===================== DIVIDER ===================== -->
+  <line x1="60" y1="455" x2="1040" y2="455" stroke="#a855f7" stroke-opacity="0.14" stroke-width="1"/>
+
+  <!-- ===================== FEATURES SECTION ===================== -->
+
+  <!-- Section header -->
+  <text x="550" y="498" text-anchor="middle"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="10.5" font-weight="700" letter-spacing="0.12em"
+        fill="#a855f7">CORE PRIMITIVES</text>
+  <text x="550" y="538" text-anchor="middle"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="32" font-weight="800" letter-spacing="-0.8"
+        fill="#f3e8ff">Built for financial correctness</text>
+  <text x="550" y="564" text-anchor="middle"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="13.5" fill="#d8b4fe" fill-opacity="0.58">Every design decision is grounded in patterns from real payment systems.</text>
+
+  <!-- == ROW 1 == -->
+
+  <!-- Card 1: Atomic Transactions (x=60, y=592) -->
+  <rect x="60" y="592" width="313" height="200" rx="14"
+        fill="url(#featCard)" stroke="#a855f7" stroke-opacity="0.20" stroke-width="1"/>
+  <rect x="78" y="612" width="38" height="38" rx="10"
+        fill="#a855f7" fill-opacity="0.14" stroke="#a855f7" stroke-opacity="0.28" stroke-width="1"/>
+  <text x="97" y="636" text-anchor="middle"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="18" font-weight="800" fill="#c084fc">A</text>
+  <text x="78" y="672"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="13.5" font-weight="700" fill="#f3e8ff">Atomic Transactions</text>
+  <text x="78" y="692"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">Every operation commits or rolls back</text>
+  <text x="78" y="708"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">as one unit &#x2014; record, ledger entries,</text>
+  <text x="78" y="724"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">and balance state together. No partial</text>
+  <text x="78" y="740"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">writes ever reach the database.</text>
+
+  <!-- Card 2: Idempotency Keys (x=393, y=592) -->
+  <rect x="393" y="592" width="313" height="200" rx="14"
+        fill="url(#featCard)" stroke="#a855f7" stroke-opacity="0.20" stroke-width="1"/>
+  <rect x="411" y="612" width="38" height="38" rx="10"
+        fill="#a855f7" fill-opacity="0.14" stroke="#a855f7" stroke-opacity="0.28" stroke-width="1"/>
+  <text x="430" y="636" text-anchor="middle"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="18" font-weight="800" fill="#c084fc">I</text>
+  <text x="411" y="672"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="13.5" font-weight="700" fill="#f3e8ff">Idempotency Keys</text>
+  <text x="411" y="692"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">Money-moving endpoints require an</text>
+  <text x="411" y="708"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">Idempotency-Key header. Retrying</text>
+  <text x="411" y="724"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">after a timeout or network failure</text>
+  <text x="411" y="740"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">never creates a duplicate transaction.</text>
+
+  <!-- Card 3: Double-Entry Ledger (x=726, y=592) -->
+  <rect x="726" y="592" width="313" height="200" rx="14"
+        fill="url(#featCard)" stroke="#a855f7" stroke-opacity="0.20" stroke-width="1"/>
+  <rect x="744" y="612" width="38" height="38" rx="10"
+        fill="#a855f7" fill-opacity="0.14" stroke="#a855f7" stroke-opacity="0.28" stroke-width="1"/>
+  <text x="763" y="636" text-anchor="middle"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="18" font-weight="800" fill="#c084fc">L</text>
+  <text x="744" y="672"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="13.5" font-weight="700" fill="#f3e8ff">Double-Entry Ledger</text>
+  <text x="744" y="692"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">Balances derive from immutable ledger</text>
+  <text x="744" y="708"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">entries that must sum to zero. Deposits</text>
+  <text x="744" y="724"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">and withdrawals are transfers against</text>
+  <text x="744" y="740"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">system wallets &#x2014; one unified model.</text>
+
+  <!-- == ROW 2 == -->
+
+  <!-- Card 4: Concurrency Control (x=60, y=812) -->
+  <rect x="60" y="812" width="313" height="200" rx="14"
+        fill="url(#featCard)" stroke="#a855f7" stroke-opacity="0.20" stroke-width="1"/>
+  <rect x="78" y="832" width="38" height="38" rx="10"
+        fill="#a855f7" fill-opacity="0.14" stroke="#a855f7" stroke-opacity="0.28" stroke-width="1"/>
+  <text x="97" y="856" text-anchor="middle"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="18" font-weight="800" fill="#c084fc">C</text>
+  <text x="78" y="892"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="13.5" font-weight="700" fill="#f3e8ff">Concurrency Control</text>
+  <text x="78" y="912"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">Debit flows acquire a row lock with</text>
+  <text x="78" y="928"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">SELECT FOR UPDATE before checking</text>
+  <text x="78" y="944"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">balance. Concurrent requests cannot</text>
+  <text x="78" y="960"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">read the same amount and overspend.</text>
+
+  <!-- Card 5: Integer Quantization (x=393, y=812) -->
+  <rect x="393" y="812" width="313" height="200" rx="14"
+        fill="url(#featCard)" stroke="#a855f7" stroke-opacity="0.20" stroke-width="1"/>
+  <rect x="411" y="832" width="38" height="38" rx="10"
+        fill="#a855f7" fill-opacity="0.14" stroke="#a855f7" stroke-opacity="0.28" stroke-width="1"/>
+  <text x="430" y="856" text-anchor="middle"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="18" font-weight="800" fill="#c084fc">Q</text>
+  <text x="411" y="892"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="13.5" font-weight="700" fill="#f3e8ff">Integer Quantization</text>
+  <text x="411" y="912"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">Amounts are stored as BIGINT</text>
+  <text x="411" y="928"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">micro-units at a 10^6 scale factor.</text>
+  <text x="411" y="944"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">Floating-point drift is eliminated</text>
+  <text x="411" y="960"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">at the storage layer from day one.</text>
+
+  <!-- Card 6: Scoped API Keys (x=726, y=812) -->
+  <rect x="726" y="812" width="313" height="200" rx="14"
+        fill="url(#featCard)" stroke="#a855f7" stroke-opacity="0.20" stroke-width="1"/>
+  <rect x="744" y="832" width="38" height="38" rx="10"
+        fill="#a855f7" fill-opacity="0.14" stroke="#a855f7" stroke-opacity="0.28" stroke-width="1"/>
+  <text x="763" y="856" text-anchor="middle"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="18" font-weight="800" fill="#c084fc">K</text>
+  <text x="744" y="892"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="13.5" font-weight="700" fill="#f3e8ff">Scoped API Keys</text>
+  <text x="744" y="912"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">Admin keys (adm_) cover provisioning</text>
+  <text x="744" y="928"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">and oversight. User keys (usr_) handle</text>
+  <text x="744" y="944"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">money movement. Operational and</text>
+  <text x="744" y="960"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="12" fill="#d8b4fe" fill-opacity="0.62">transactional privileges never overlap.</text>
+
+</svg>
